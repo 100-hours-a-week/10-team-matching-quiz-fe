@@ -5,7 +5,7 @@ import { InterviewGuideline } from '@/components/features'
 import { useTimerStore } from '@/stores/timerStore'
 import { useInterviewId, useStartInterview } from '@/hooks'
 import { useAIInterviewStore, useAuthStore } from '@/stores'
-import { useRecordingStore } from '@/stores/recordingStore'
+// import { useRecordingStore } from '@/stores/recordingStore'
 import styles from './styles.module.scss'
 
 export const AwaitingPage: React.FC = () => {
@@ -13,7 +13,7 @@ export const AwaitingPage: React.FC = () => {
   const [toggleModal, setToggleModal] = useState(false)
   const [error, setError] = useState<string[]>([])
 
-  const { setMediaRecorder, clearChunks } = useRecordingStore()
+  // const { setMediaRecorder, clearChunks } = useRecordingStore()
   const { startInterview, loading } = useStartInterview()
   const { startTimer } = useTimerStore()
 
@@ -37,30 +37,32 @@ export const AwaitingPage: React.FC = () => {
       return
     }
 
-    const permission = await navigator.permissions.query({
-      name: 'microphone' as PermissionName,
-    })
+    await startInterview(interviewId, duration)
 
-    if (permission.state === 'denied') {
-      setError([
-        '마이크 권한이 차단되어 있습니다.',
-        '브라우저 설정에서 마이크 권한을 허용해주세요.',
-      ])
-      setToggleModal(true)
-      return
-    }
+    // const permission = await navigator.permissions.query({
+    //   name: 'microphone' as PermissionName,
+    // })
+
+    // if (permission.state === 'denied') {
+    //   setError([
+    //     '마이크 권한이 차단되어 있습니다.',
+    //     '브라우저 설정에서 마이크 권한을 허용해주세요.',
+    //   ])
+    //   setToggleModal(true)
+    //   return
+    // }
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      const recorder = new MediaRecorder(stream)
+      // const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      // const recorder = new MediaRecorder(stream)
 
-      clearChunks()
+      // clearChunks()
 
-      recorder.start(1000)
+      // recorder.start(1000)
 
-      setMediaRecorder(recorder)
+      // setMediaRecorder(recorder)
 
-      await startInterview(interviewId, duration)
+      // await startInterview(interviewId, duration)
 
       startTimer(duration)
       setCurrentPhase('PROGRESS')
