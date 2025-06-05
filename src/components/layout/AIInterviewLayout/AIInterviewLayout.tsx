@@ -2,11 +2,19 @@ import { Outlet } from 'react-router-dom'
 import { useEffect } from 'react'
 import { Logo } from '@/components/ui'
 import { Timer } from '@/components/features'
-import { useRecordingStore } from '@/stores'
+import { useAIInterviewStore, useRecordingStore } from '@/stores'
+import { useFinishInterview } from '@/hooks'
 import styles from './styles.module.scss'
 
 export const AIInterviewLayout: React.FC = () => {
+  const { interviewId } = useAIInterviewStore()
   const { mediaRecorder, addAudioChunk } = useRecordingStore()
+  const { finishInterview } = useFinishInterview()
+
+  const handleEndInterview = async () => {
+    if (!interviewId) return
+    await finishInterview(interviewId)
+  }
 
   useEffect(() => {
     if (mediaRecorder) {
@@ -29,7 +37,7 @@ export const AIInterviewLayout: React.FC = () => {
           <Logo white />
         </div>
         <div className={styles.timerWrapper}>
-          <Timer />
+          <Timer onTimeUp={handleEndInterview} />
         </div>
       </div>
       <div className={styles.pageContent}>

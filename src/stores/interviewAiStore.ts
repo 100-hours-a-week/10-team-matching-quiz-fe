@@ -14,6 +14,7 @@ interface InterviewState {
   setCurrentPhase: (currentPhase: string) => void
   setInterviewData: (data: Partial<AIInterviewData>) => void
   setDuration: (duration: number) => void
+  reset: () => void
 }
 
 export const useAIInterviewStore = create<InterviewState>()(
@@ -36,6 +37,8 @@ export const useAIInterviewStore = create<InterviewState>()(
           ...state,
           ...data,
         })),
+
+      reset: () => sessionStorage.removeItem('ai-interview-storage'),
     }),
     {
       name: 'ai-interview-storage',

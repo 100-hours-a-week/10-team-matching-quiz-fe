@@ -15,7 +15,7 @@ export const useFinishInterview = () => {
     clearChunks,
     setRecordedBlob,
   } = useRecordingStore()
-  const { setCurrentPhase } = useAIInterviewStore()
+  const { setCurrentPhase, reset } = useAIInterviewStore()
   const { resetTimer } = useTimerStore()
   const { uploadAudio } = useAudioUpload()
 
@@ -47,6 +47,7 @@ export const useFinishInterview = () => {
             console.error('오디오 업로드 중 오류 발생:', error)
           } finally {
             setLoading(false)
+            reset()
             resetTimer({ minutes: 0, seconds: 0 })
             setCurrentPhase('COMPLETE')
             navigate('/interview-ai/end')

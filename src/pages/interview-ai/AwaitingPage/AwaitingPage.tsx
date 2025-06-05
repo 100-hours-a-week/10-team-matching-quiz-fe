@@ -60,16 +60,33 @@ export const AwaitingPage: React.FC = () => {
 
       setMediaRecorder(recorder)
 
-      await startInterview(interviewId, duration)
+      try {
+        await startInterview(interviewId, duration)
 
-      startTimer(duration)
-      setCurrentPhase('PROGRESS')
-      navigate('/interview-ai/question')
-    } catch (error) {
-      console.error('면접 질문 생성 실패', error)
+        startTimer(duration)
+
+        setCurrentPhase('PROGRESS')
+
+        navigate('/interview-ai/question')
+      } catch (interviewError) {
+        console.error('면접 시작 실패:', interviewError)
+
+        if (recorder.state !== 'inactive') {
+          recorder.stop()
+        }
+        stream.getTracks().forEach(track => track.stop())
+
+        setError([
+          '면접 시작에 실패했습니다.',
+          '새로고침 후 다시 시도해주세요.',
+        ])
+        setToggleModal(true)
+      }
+    } catch (mediaError) {
+      console.error('미디어 레코더 설정 실패:', mediaError)
       setError([
-        '면접 질문 생성에 실패했습니다.',
-        '새로고침 후 다시 시도해주세요.',
+        '마이크 설정에 실패했습니다.',
+        '마이크 권한을 확인하고 다시 시도해주세요.',
       ])
       setToggleModal(true)
     }

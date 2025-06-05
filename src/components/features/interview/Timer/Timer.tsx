@@ -3,7 +3,11 @@ import { useTimerStore } from '@/stores/timerStore'
 import { Timer as TimerIcon } from 'lucide-react'
 import styles from './styles.module.scss'
 
-export const Timer: React.FC = () => {
+interface TimerProps {
+  onTimeUp?: () => void
+}
+
+export const Timer: React.FC<TimerProps> = ({ onTimeUp }) => {
   const { isActive, time } = useTimerStore()
 
   useEffect(() => {
@@ -20,7 +24,13 @@ export const Timer: React.FC = () => {
           if (minutes > 0) {
             return { time: { minutes: minutes - 1, seconds: 59 } }
           }
+
           clearInterval(timer!)
+
+          if (onTimeUp) {
+            onTimeUp()
+          }
+
           return { isActive: false, time: { minutes: 0, seconds: 0 } }
         })
       }, 1000)
@@ -29,7 +39,7 @@ export const Timer: React.FC = () => {
     return () => {
       if (timer) clearInterval(timer)
     }
-  }, [isActive])
+  }, [isActive, onTimeUp])
 
   return (
     <div className={styles.container}>
