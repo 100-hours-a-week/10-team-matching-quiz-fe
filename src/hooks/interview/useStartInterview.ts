@@ -21,9 +21,14 @@ export const useStartInterview = () => {
     const interviewId = await getInterviewId(duration)
     if (interviewId) setInterviewId(interviewId)
 
+    console.log('id', interviewId)
+
     await updateInterviewStatus(interviewId)
 
     const response = await generateQuestion(interviewId)
+
+    console.log('질문', response)
+
     const question = response?.question
 
     await delay
